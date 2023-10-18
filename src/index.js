@@ -37,6 +37,15 @@ window.onload = function init()
     }, undefined, (error) => {
         console.error(error);
     })
+    
+    loader.load('./models/white_pawn.glb', (gltf) => {
+        var pawn = gltf.scene;
+        pawn.scale.set(0.25, 0.25, 0.25);
+        pawn.position.set(0, 0, 0);
+        scene.add(pawn);
+    }, undefined, (error) => {
+        console.error(error);
+    });
 
     const AmbLight = new THREE.AmbientLight(0xffffff, 1);
     AmbLight.position.set(100);

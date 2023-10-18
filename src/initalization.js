@@ -42,6 +42,11 @@ function createWhitePieces(scene, loader) {
   for (let i = 0; i < 8; i++) {
     loader.load('./models/white_pawn.glb', (gltf) => {
         var pawn = gltf.scene;
+        pawn.traverse((node) => {
+          if(node.isMesh) {
+            node.receiveShadow = true;
+          }
+        })
         pawn.scale.set(pieceScale, pieceScale, pieceScale);
         pawn.position.set(1, 0, 1.4 -(i * squareSize));
         scene.add(pawn)

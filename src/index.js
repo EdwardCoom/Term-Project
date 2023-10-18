@@ -28,8 +28,9 @@ window.onload = function init()
     AmbLight.position.set(100);
     scene.add(AmbLight)
     
-    const light = new THREE.SpotLight(0xE8DB9F, 15);
-    light.position.set(0, 3, 0);
+    const light = new THREE.SpotLight(0xE8DB9F, 20);
+    light.castShadow = true;
+    light.position.set(0, 3, 0.25);
     light.target.position.set(0, 0, 0)
     scene.add(light)
     renderer.setClearColor(new THREE.Color(0xffffff), 1.0)
@@ -42,6 +43,7 @@ window.onload = function init()
     animate();
 
     window.onresize = () => {
+        camera.updateWorldMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
     }

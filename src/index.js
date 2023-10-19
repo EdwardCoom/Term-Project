@@ -43,9 +43,10 @@ window.onload = function init()
     animate();
 
     window.onresize = () => {
-        camera.updateWorldMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        
     }
 }
 

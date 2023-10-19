@@ -39,14 +39,10 @@ function createTable(scene, loader) {
 }
 
 function createWhitePieces(scene, loader) {
+  // Load Pawns
   for (let i = 0; i < 8; i++) {
     loader.load('./models/white_pawn.glb', (gltf) => {
         var pawn = gltf.scene;
-        pawn.traverse((node) => {
-          if(node.isMesh) {
-            node.receiveShadow = true;
-          }
-        })
         pawn.scale.set(pieceScale, pieceScale, pieceScale);
         pawn.position.set(1, 0, 1.4 -(i * squareSize));
         scene.add(pawn)
@@ -54,11 +50,63 @@ function createWhitePieces(scene, loader) {
       console.error(error)
     })
   }
-}
+  // Load Rooks
+  for (let i = 0; i < 2; i++) {
+    loader.load('./models/white_rook.glb', (gltf) => {
+        var rook = gltf.scene;
+        rook.scale.set(pieceScale, pieceScale, pieceScale);
+        rook.position.set(1.4, 0, 1.4 - (i*2.8))
+        scene.add(rook);
+    }, undefined, (error) => {
+      console.error(error)
+    })
+  }
+  // load knights
+  for (let i = 0; i < 2; i++) {
+    loader.load('./models/white_knight.glb', (gltf) => {
+      var knight = gltf.scene;
+      knight.scale.set(pieceScale, pieceScale, pieceScale);
+      knight.position.set(1.4, 0, 1 - (i*2))
+      scene.add(knight);
+    }, undefined, (error) => {
+      console.error(error)
+    })
+  }
+  // load bishops
+  for (let i = 0; i < 2; i++) {
+    loader.load('./models/white_bishop.glb', (gltf) => {
+      var knight = gltf.scene;
+      knight.scale.set(pieceScale, pieceScale, pieceScale);
+      knight.position.set(1.4, 0, 0.6 - (i*1.2))
+      scene.add(knight);
+    }, undefined, (error) => {
+      console.error(error)
+    })
+  }
+  // load king and queen
+  loader.load('./models/white_king.glb', (gltf) => {
+      var queen = gltf.scene;
+      queen.scale.set(pieceScale, pieceScale, pieceScale)
+      queen.position.set(1.4, 0, -0.2)
+      scene.add(queen)
+  }, undefined, (error) => {
+    console.error(error)
+  })
+
+  loader.load('./models/white_queen.glb', (gltf) => {
+    var queen = gltf.scene;
+    queen.scale.set(pieceScale, pieceScale, pieceScale)
+    queen.position.set(1.4, 0, 0.2)
+    scene.add(queen)
+  }, undefined, (error) => {
+    console.error(error)
+  })
+
+} 
 
 function createBlackPieces(scene, loader) {
   for(let i = 0; i < 8; i++) {
-    loader.load('./models/white_pawn.glb', (gltf) => {
+    loader.load('./models/black_pawn.glb', (gltf) => {
       var pawn = gltf.scene;
       pawn.scale.set(pieceScale, pieceScale, pieceScale);
       pawn.position.set(-1, 0, 1.4 - (i * squareSize));
@@ -67,4 +115,55 @@ function createBlackPieces(scene, loader) {
       console.error(error);
     })
   }
+  // Load Rooks
+  for (let i = 0; i < 2; i++) {
+    loader.load('./models/black_rook.glb', (gltf) => {
+        var rook = gltf.scene;
+        rook.scale.set(pieceScale, pieceScale, pieceScale);
+        rook.position.set(-1.4, 0, 1.4 - (i*2.8))
+        scene.add(rook);
+    }, undefined, (error) => {
+      console.error(error)
+    })
+  }
+
+  for (let i = 0; i < 2; i++) {
+    loader.load('./models/black_knight.glb', (gltf) => {
+      var knight = gltf.scene;
+      knight.scale.set(pieceScale, pieceScale, pieceScale);
+      knight.position.set(-1.4, 0, 1 - (i*2))
+      scene.add(knight);
+    }, undefined, (error) => {
+      console.error(error)
+    })
+  }
+  // load bishops
+  for (let i = 0; i < 2; i++) {
+    loader.load('./models/black_bishop.glb', (gltf) => {
+      var knight = gltf.scene;
+      knight.scale.set(pieceScale, pieceScale, pieceScale);
+      knight.position.set(-1.4, 0, 0.6 - (i*1.2))
+      scene.add(knight);
+    }, undefined, (error) => {
+      console.error(error)
+    })
+  }
+  // load king and queen
+  loader.load('./models/black_king.glb', (gltf) => {
+      var queen = gltf.scene;
+      queen.scale.set(pieceScale, pieceScale, pieceScale)
+      queen.position.set(-1.4, 0, -0.2)
+      scene.add(queen)
+  }, undefined, (error) => {
+    console.error(error)
+  })
+
+  loader.load('./models/black_queen.glb', (gltf) => {
+    var queen = gltf.scene;
+    queen.scale.set(pieceScale, pieceScale, pieceScale)
+    queen.position.set(-1.4, 0, 0.2)
+    scene.add(queen)
+  }, undefined, (error) => {
+    console.error(error)
+  })
 }

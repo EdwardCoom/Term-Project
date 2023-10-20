@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {createChessEnvironment} from './initalization.js';
+import { pickPiece } from './controls.js';
 window.onload = function init()
 {
     const renderer = new THREE.WebGLRenderer();
@@ -10,6 +11,10 @@ window.onload = function init()
     renderer.shadowMap.needsUpdate = true;
     renderer.shadowMap.type = THREE.VSMShadowMap;
     document.body.appendChild(renderer.domElement);
+
+    const raycaster = new THREE.Raycaster();
+
+    renderer.domElement.addEventListener('click', (e) => {pickPiece(e, raycaster, camera, scene)})
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 1 , 500);
     camera.position.set(0, 0, 5);
@@ -35,6 +40,7 @@ window.onload = function init()
     scene.add(light)
     renderer.setClearColor(new THREE.Color(0xffffff), 1.0)
     
+    
     function animate() {
         requestAnimationFrame( animate );
         controls.update();
@@ -43,9 +49,10 @@ window.onload = function init()
     animate();
 
     window.onresize = () => {
-        camera.updateWorldMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        
     }
 }
 

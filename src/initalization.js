@@ -4,6 +4,7 @@
  */
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
+import {Difficulty, Mode, requestBuilder, sendRequest} from './stockfish.js'
 
 const pieceScale = 0.25
 const squareSize = 0.4
@@ -13,6 +14,8 @@ export function createChessEnvironment(scene) {
   createTable(scene, loader)
   createWhitePieces(scene, loader)
   createBlackPieces(scene, loader)
+  var res = sendRequest() // running into problems transferring data.
+  console.log()
 }
 
 
@@ -108,6 +111,9 @@ function createBlackPieces(scene, loader) {
   for(let i = 0; i < 8; i++) {
     loader.load('./models/black_pawn.glb', (gltf) => {
       var pawn = gltf.scene;
+      pawn.addEventListener('click', (e) => {
+        console.log(e);
+      })
       pawn.scale.set(pieceScale, pieceScale, pieceScale);
       pawn.position.set(-1, 0, 1.4 - (i * squareSize));
       scene.add(pawn)

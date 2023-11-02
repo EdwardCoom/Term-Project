@@ -4,6 +4,8 @@
  */
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import {Difficulty, Mode, requestBuilder, sendRequest} from './stockfish.js'
 
 const pieceScale = 0.25
@@ -17,7 +19,6 @@ export function createChessEnvironment(scene) {
   var res = sendRequest() // running into problems transferring data.
   console.log()
 }
-
 
 function createBoard(scene, loader) {
   loader.load('./models/chess.glb', (gltf) => {

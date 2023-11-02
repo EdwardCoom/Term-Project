@@ -3,6 +3,11 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {createChessEnvironment} from './initalization.js';
 import { pickPiece } from './controls.js';
+
+// Debug variables
+var x = 0;
+var y = 0;
+var z = 0;
 window.onload = function init()
 {
     const renderer = new THREE.WebGLRenderer();
@@ -14,11 +19,11 @@ window.onload = function init()
 
     const raycaster = new THREE.Raycaster();
 
-    renderer.domElement.addEventListener('click', (e) => {pickPiece(e, raycaster, camera, scene)})
-
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 1 , 500);
     camera.position.set(0, 0, 5);
     camera.lookAt(0, 0, 0);
+
+    renderer.domElement.addEventListener('mousedown', (e) => {pickPiece(e, raycaster, camera, scene)})
 
     const controls = new OrbitControls( camera, renderer.domElement);
     controls.update();
@@ -44,6 +49,10 @@ window.onload = function init()
     function animate() {
         requestAnimationFrame( animate );
         controls.update();
+        if(x != camera.position.x || y != camera.position.y || z != camera.position.z) {
+            [x, y, z] = [camera.position.x, camera.position.y, camera.position.z]
+            console.log(`x: ${camera.position.x} y: ${camera.position.y} z: ${camera.position.z}`)
+        }
         renderer.render( scene, camera );
     }
     animate();

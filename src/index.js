@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {createChessEnvironment} from './initalization.js';
-import { pickPiece } from './controls.js';
+import {createChessEnvironment} from './initialization.js';
+import { pickPiece, resetSelection } from './controls.js';
 
 // Debug variables
 var x = 0;
@@ -23,7 +23,13 @@ window.onload = function init()
     camera.position.set(0, 0, 5);
     camera.lookAt(0, 0, 0);
 
-    renderer.domElement.addEventListener('mousedown', (e) => {pickPiece(e, raycaster, camera, scene)})
+    renderer.domElement.addEventListener('mousedown', (e) => {
+        if(e.button === 0) {
+            pickPiece(e, raycaster, camera, scene)
+        } else {
+            resetSelection()
+        }
+    })
 
     const controls = new OrbitControls( camera, renderer.domElement);
     controls.update();

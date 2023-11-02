@@ -36,3 +36,8 @@ export function pickPiece(event, raycaster, camera, scene) {
         }
     }
 }
+
+export function resetSelection() {
+    firstClick = !firstClick
+    pieceClicked.material.color.set(pieceMaterial.getHex())
+}

@@ -12,6 +12,7 @@ window.onload = function init()
     renderer.shadowMap.type = THREE.VSMShadowMap;
     document.body.appendChild(renderer.domElement);
 
+   
     const raycaster = new THREE.Raycaster();
 
     renderer.domElement.addEventListener('click', (e) => {pickPiece(e, raycaster, camera, scene)})

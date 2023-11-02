@@ -10,6 +10,7 @@ const pieceScale = 0.25
 const squareSize = 0.4
 export function createChessEnvironment(scene) {
   var loader = new GLTFLoader();
+  createRoom(scene, loader)
   createBoard(scene, loader)
   createTable(scene, loader)
   createWhitePieces(scene, loader)
@@ -18,6 +19,16 @@ export function createChessEnvironment(scene) {
   console.log()
 }
 
+function createRoom(scene, loader) {
+  loader.load('./models/1st_low_polyroom.glb', (gltf) => {
+    var room = gltf.scene;
+    room.scale.set(2, 2, 2);
+    room.position.set(1, -2.71, -1.1);
+    scene.add(room);
+  }, undefined, (error) => {
+    console.error(error)
+  })
+}
 
 function createBoard(scene, loader) {
   loader.load('./models/chess.glb', (gltf) => {

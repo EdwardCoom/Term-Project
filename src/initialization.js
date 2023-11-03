@@ -4,8 +4,6 @@
  */
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import {Difficulty, Mode, requestBuilder, sendRequest} from './stockfish.js'
 
 const pieceScale = 0.25
@@ -13,12 +11,35 @@ const squareSize = 0.4
 export function createChessEnvironment(scene) {
   var loader = new GLTFLoader();
   createBoard(scene, loader)
-  createTable(scene, loader)
+  //createTable(scene, loader)
   createWhitePieces(scene, loader)
   createBlackPieces(scene, loader)
   var res = sendRequest() // running into problems transferring data.
   console.log()
 }
+
+export function initCanvasBasics() {
+  const scene = new THREE.Scene();
+  const renderer = initRenderer();
+  const camera = initCamera();
+  const controls = new OrbitControls( camera, renderer.domElement);
+  return [scene, renderer, camera, controls]
+}
+
+export function initLighting(scene, renderer) {
+  const AmbLight = new THREE.AmbientLight(0xffffff, 1);
+  AmbLight.position.set(100);
+  scene.add(AmbLight)
+  
+  const light = new THREE.SpotLight(0xE8DB9F, 20);
+  light.castShadow = true;
+  light.position.set(0, 3, 0.25);
+  light.target.position.set(0, 0, 0)
+  scene.add(light)
+  renderer.setClearColor(new THREE.Color(0xffffff), 1.0)
+}
+
+// NON-exported functions past this comment
 
 function createBoard(scene, loader) {
   loader.load('./models/chess.glb', (gltf) => {
@@ -31,7 +52,7 @@ function createBoard(scene, loader) {
   })
 }
 
-function createTable(scene, loader) {
+/*function createTable(scene, loader) {
   loader.load('./models/StylishDesk.glb', (gltf) => {
     var table = gltf.scene;
     table.scale.set(3, 0, 2);
@@ -40,7 +61,7 @@ function createTable(scene, loader) {
   }, undefined, (error) => {
     console.error(error);
   })
-}
+}*/
 
 function createWhitePieces(scene, loader) {
   // Load Pawns
@@ -173,4 +194,21 @@ function createBlackPieces(scene, loader) {
   }, undefined, (error) => {
     console.error(error)
   })
+}
+
+function initRenderer() {
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.needsUpdate = true;
+    renderer.shadowMap.type = THREE.VSMShadowMap;
+    document.body.appendChild(renderer.domElement);
+    return renderer;
+}
+
+function initCamera() {
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 1 , 500);
+  camera.position.set(0, 0, 5);
+  camera.lookAt(0, 0, 0);
+  return camera;
 }

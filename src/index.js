@@ -1,11 +1,14 @@
 import * as THREE from 'three';
 import {createChessEnvironment, initCanvasBasics, initLighting} from './initialization.js';
 import { pickPiece, resetSelection } from './controls.js';
+import {renderAtScale} from './util.js';
 
 // Debug variables
 var x = 0;
 var y = 0;
 var z = 0;
+
+
 window.onload = function init()
 {
     const [scene, renderer, camera, controls] = initCanvasBasics();

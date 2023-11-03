@@ -4,6 +4,7 @@
  */
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {Difficulty, Mode, requestBuilder, sendRequest} from './stockfish.js'
 
 const pieceScale = 0.25

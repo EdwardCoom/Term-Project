@@ -1,7 +1,5 @@
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {createChessEnvironment, initCanvasBasics} from './initialization.js';
+import {createChessEnvironment, initCanvasBasics, initLighting} from './initialization.js';
 import { pickPiece, resetSelection } from './controls.js';
 
 // Debug variables

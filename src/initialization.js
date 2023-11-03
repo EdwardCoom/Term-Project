@@ -14,7 +14,7 @@ export function createChessEnvironment(scene) {
   var loader = new GLTFLoader();
   createRoom(scene, loader)
   createBoard(scene, loader)
-  createTable(scene, loader)
+  //createTable(scene, loader)
   createWhitePieces(scene, loader)
   createBlackPieces(scene, loader)
   var res = sendRequest() // running into problems transferring data.
@@ -22,7 +22,7 @@ export function createChessEnvironment(scene) {
 }
 
 function createRoom(scene, loader) {
-  loader.load('./models/1st_low_polyroom.glb', (gltf) => {
+  loader.load('./models/polyroom.glb', (gltf) => {
     var room = gltf.scene;
     room.scale.set(2, 2, 2);
     room.position.set(1, -2.71, -1.1);

@@ -46,7 +46,7 @@ export function pickPiece(event, raycaster, camera, scene) {
         var intersects = raycaster.intersectObjects(scene.children, true);
         console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
         
-        if (allowedObjects.includes(intersects[0].object.name)) {
+        //if (allowedObjects.includes(intersects[0].object.name)) {
             try {
                 pieceClicked.material.color.set(pieceMaterial.getHex())
 
@@ -56,7 +56,7 @@ export function pickPiece(event, raycaster, camera, scene) {
             catch (e) {
                 console.warn(e)
             }
-        }
+        //}
         var squareC = whichSquare(intersects[0].point);
         worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
     }

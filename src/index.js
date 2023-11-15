@@ -1,13 +1,14 @@
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {createChessEnvironment} from './initialization.js';
+import {createChessEnvironment, initCanvasBasics, initLighting} from './initialization.js';
 import { pickPiece, resetSelection } from './controls.js';
+import {renderAtScale} from './util.js';
 
 // Debug variables
 var x = 0;
 var y = 0;
 var z = 0;
+
+
 window.onload = function init()
 {
     const renderer = new THREE.WebGLRenderer();
@@ -17,29 +18,25 @@ window.onload = function init()
     renderer.shadowMap.type = THREE.VSMShadowMap;
     document.body.appendChild(renderer.domElement);
 
-   
+    const [scene, renderer, camera, controls] = initCanvasBasics();
+
     const raycaster = new THREE.Raycaster();
 
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 1 , 500);
-    camera.position.set(0, 0, 5);
-    camera.lookAt(0, 0, 0);
 
     renderer.domElement.addEventListener('mousedown', (e) => {
-        if(e.button === 0) {
-            pickPiece(e, raycaster, camera, scene)
-        } else {
-            resetSelection()
+        callSelection(e, raycaster, camera, scene);
+    })
+
+    renderer.domElement.addEventListener('mouseup', (e) => {
+        if(x != camera.position.x || y != camera.position.y || z != camera.position.z) {
+            [x, y, z] = [camera.position.x, camera.position.y, camera.position.z]
+            console.log(`x: ${camera.position.x} y: ${camera.position.y} z: ${camera.position.z}`)
         }
     })
 
-    const controls = new OrbitControls( camera, renderer.domElement);
     controls.update();
-
-    const scene = new THREE.Scene();
-    
-    const loader = new GLTFLoader();
-    
     createChessEnvironment(scene)
+
 
     const AmbLight = new THREE.AmbientLight(0xffffff, 1.5);
     AmbLight.position.set(100);
@@ -52,23 +49,27 @@ window.onload = function init()
     scene.add(light)
     renderer.setClearColor(new THREE.Color(0xffffff), 1.0)
     
+
+    initLighting(scene, renderer);
     
     function animate() {
         requestAnimationFrame( animate );
         controls.update();
-        if(x != camera.position.x || y != camera.position.y || z != camera.position.z) {
-            [x, y, z] = [camera.position.x, camera.position.y, camera.position.z]
-            console.log(`x: ${camera.position.x} y: ${camera.position.y} z: ${camera.position.z}`)
-        }
         renderer.render( scene, camera );
     }
     animate();
 
     window.onresize = () => {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+        renderAtScale(renderer, camera);
         
+    }
+}
+
+function callSelection(e, raycaster, camera, scene) {
+    if(e.button === 0) {
+        pickPiece(e, raycaster, camera, scene)
+    } else {
+        resetSelection()
     }
 }
 

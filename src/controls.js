@@ -28,7 +28,7 @@ export function pickPiece(event, raycaster, camera, scene) {
         var intersects = raycaster.intersectObjects(scene.children, true)
         console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
 
-        if (allowedObjects.includes(intersects[0].object.name)) {
+        if (allowedObjects.includes(intersects[0].object.name)) {  // checks to see if the intersected object is a chess piece
             try {
                 pieceMaterial = intersects[0].object.material.color.clone();
                 intersects[0].object.material.color.set(0x00CC00);
@@ -45,20 +45,17 @@ export function pickPiece(event, raycaster, camera, scene) {
         raycaster.setFromCamera( new THREE.Vector2(mouseX, mouseY), camera ); 
         var intersects = raycaster.intersectObjects(scene.children, true);
         console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
-        
-        //if (allowedObjects.includes(intersects[0].object.name)) {
-            try {
-                pieceClicked.material.color.set(pieceMaterial.getHex())
 
-                
-    
-            }
-            catch (e) {
-                console.warn(e)
-            }
-        //}
+        try {
+            pieceClicked.material.color.set(pieceMaterial.getHex())
+        }
+        catch (e) {
+            console.warn(e)
+        }
+        
         var squareC = whichSquare(intersects[0].point);
         worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
+        pieceClicked = NaN; // unselects piece after move
     }
 }
 // translates piece (a scene object) to newLoc (world coordinate Vector3)

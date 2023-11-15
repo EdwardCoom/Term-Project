@@ -11,7 +11,15 @@ var z = 0;
 
 window.onload = function init()
 {
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.needsUpdate = true;
+    renderer.shadowMap.type = THREE.VSMShadowMap;
+    document.body.appendChild(renderer.domElement);
+
     const [scene, renderer, camera, controls] = initCanvasBasics();
+
     const raycaster = new THREE.Raycaster();
 
 
@@ -28,6 +36,20 @@ window.onload = function init()
 
     controls.update();
     createChessEnvironment(scene)
+
+
+    const AmbLight = new THREE.AmbientLight(0xffffff, 1.5);
+    AmbLight.position.set(100);
+    scene.add(AmbLight)
+    
+    const light = new THREE.SpotLight(0xE8DB9F, 100);
+    light.castShadow = true;
+    light.position.set(0, 13, 0.25);
+    light.target.position.set(0, 0, 0)
+    scene.add(light)
+    renderer.setClearColor(new THREE.Color(0xffffff), 1.0)
+    
+
     initLighting(scene, renderer);
     
     function animate() {

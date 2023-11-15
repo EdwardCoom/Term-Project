@@ -11,14 +11,15 @@ var z = 0;
 
 window.onload = function init()
 {
-    const renderer = new THREE.WebGLRenderer();
+    const [scene, renderer, camera, controls] = initCanvasBasics();
+    
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.needsUpdate = true;
     renderer.shadowMap.type = THREE.VSMShadowMap;
     document.body.appendChild(renderer.domElement);
 
-    const [scene, renderer, camera, controls] = initCanvasBasics();
+
 
     const raycaster = new THREE.Raycaster();
 

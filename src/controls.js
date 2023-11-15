@@ -3,6 +3,7 @@ import { Object3D } from 'three';
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
 
+
 var firstClick = false;
 var pieceClicked = NaN;
 var pieceMaterial = 0;

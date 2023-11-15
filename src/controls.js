@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 import { Object3D } from 'three';
 
+const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
+
+
 var firstClick = false;
 var pieceClicked = NaN;
 var pieceMaterial = 0;
@@ -24,30 +27,36 @@ export function pickPiece(event, raycaster, camera, scene) {
         firstClick = true
         raycaster.setFromCamera( new THREE.Vector2(mouseX, mouseY), camera ); 
         var intersects = raycaster.intersectObjects(scene.children, true)
-        try {
-            pieceMaterial = intersects[0].object.material.color.clone();
-            intersects[0].object.material.color.set(0x00CC00);
-            pieceClicked = intersects[0].object;
+        console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
 
-        }
-        catch (e) {
-            console.warn(e)
+        if (allowedObjects.includes(intersects[0].object.name)) {  // checks to see if the intersected object is a chess piece
+            try {
+                pieceMaterial = intersects[0].object.material.color.clone();
+                intersects[0].object.material.color.set(0x00CC00);
+                pieceClicked = intersects[0].object;
+
+            }
+            catch (e) {
+                console.warn(e)
+            }
         }
     }
     else {
         firstClick = false;
         raycaster.setFromCamera( new THREE.Vector2(mouseX, mouseY), camera ); 
         var intersects = raycaster.intersectObjects(scene.children, true);
+        console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
+
         try {
             pieceClicked.material.color.set(pieceMaterial.getHex())
-
-            var squareC = whichSquare(intersects[0].point);
-            worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
- 
         }
         catch (e) {
             console.warn(e)
         }
+        
+        var squareC = whichSquare(intersects[0].point);
+        worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
+        pieceClicked = NaN; // unselects piece after move
     }
 }
 // translates piece (a scene object) to newLoc (world coordinate Vector3)

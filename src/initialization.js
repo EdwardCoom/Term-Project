@@ -50,7 +50,19 @@ export function initLighting(scene, renderer) {
   light.target.position.set(0, 0, 0)
   scene.add(light)
   renderer.setClearColor(new THREE.Color(0xffffff), 1.0)
-}
+
+  // Another Light Option
+  // const dlight = new THREE.DirectionalLight(0xffffff, 1);
+  // dlight.position.set(-30, 50, -30);
+  // dlight.castShadow = true;
+  // dlight.shadow.mapSize.width = 2048;
+  // dlight.shadow.mapSize.height = 2048;
+  // dlight.shadow.camera.left = -70;
+  // dlight.shadow.camera.right = 70;
+  // dlight.shadow.camera.top = 70;
+  // dlight.shadow.camera.bottom = -70;
+  // scene.add(dlight);
+ }
 
 // NON-exported functions past this comment
 

@@ -9,13 +9,16 @@ import {Difficulty, Mode, requestBuilder, sendRequest} from './stockfish.js'
 
 const pieceScale = 0.25
 const squareSize = 0.4
+export var pieceArray = []
 export function createChessEnvironment(scene) {
   var loader = new GLTFLoader();
   createRoom(scene, loader)
   createBoard(scene, loader)
+  initializeArray(pieceArray)
   //createTable(scene, loader)
   createWhitePieces(scene, loader)
   createBlackPieces(scene, loader)
+  console.log(pieceArray)
   var res = sendRequest() // running into problems transferring data.
   console.log()
 }
@@ -93,6 +96,7 @@ function createWhitePieces(scene, loader) {
   for (let i = 0; i < 8; i++) {
     loader.load('./models/white_pawn.glb', (gltf) => {
         var pawn = gltf.scene;
+        pieceArray[(8) + i] = gltf.asset
         pawn.scale.set(pieceScale, pieceScale, pieceScale);
         pawn.position.set(1, 0, 1.4 -(i * squareSize));
         scene.add(pawn)
@@ -104,6 +108,7 @@ function createWhitePieces(scene, loader) {
   for (let i = 0; i < 2; i++) {
     loader.load('./models/white_rook.glb', (gltf) => {
         var rook = gltf.scene;
+        pieceArray[(7 * i)] = gltf.asset;
         rook.scale.set(pieceScale, pieceScale, pieceScale);
         rook.position.set(1.4, 0, 1.4 - (i*2.8))
         scene.add(rook);
@@ -115,6 +120,7 @@ function createWhitePieces(scene, loader) {
   for (let i = 0; i < 2; i++) {
     loader.load('./models/white_knight.glb', (gltf) => {
       var knight = gltf.scene;
+      pieceArray[1 + (i * 5)] = gltf.asset
       knight.scale.set(pieceScale, pieceScale, pieceScale);
       knight.position.set(1.4, 0, 1 - (i*2))
       scene.add(knight);
@@ -125,26 +131,29 @@ function createWhitePieces(scene, loader) {
   // load bishops
   for (let i = 0; i < 2; i++) {
     loader.load('./models/white_bishop.glb', (gltf) => {
-      var knight = gltf.scene;
-      knight.scale.set(pieceScale, pieceScale, pieceScale);
-      knight.position.set(1.4, 0, 0.6 - (i*1.2))
-      scene.add(knight);
+      var bishop = gltf.scene;
+      pieceArray[2 + (i * 3)] = gltf.asset
+      bishop.scale.set(pieceScale, pieceScale, pieceScale);
+      bishop.position.set(1.4, 0, 0.6 - (i*1.2))
+      scene.add(bishop);
     }, undefined, (error) => {
       console.error(error)
     })
   }
   // load king and queen
   loader.load('./models/white_king.glb', (gltf) => {
-      var queen = gltf.scene;
-      queen.scale.set(pieceScale, pieceScale, pieceScale)
-      queen.position.set(1.4, 0, -0.2)
-      scene.add(queen)
+      var king = gltf.scene;
+      pieceArray[4] = gltf.asset
+      king.scale.set(pieceScale, pieceScale, pieceScale)
+      king.position.set(1.4, 0, -0.2)
+      scene.add(king)
   }, undefined, (error) => {
     console.error(error)
   })
 
   loader.load('./models/white_queen.glb', (gltf) => {
     var queen = gltf.scene;
+    pieceArray[3] = gltf.asset;
     queen.scale.set(pieceScale, pieceScale, pieceScale)
     queen.position.set(1.4, 0, 0.2)
     scene.add(queen)
@@ -158,9 +167,7 @@ function createBlackPieces(scene, loader) {
   for(let i = 0; i < 8; i++) {
     loader.load('./models/black_pawn.glb', (gltf) => {
       var pawn = gltf.scene;
-      pawn.addEventListener('click', (e) => {
-        console.log(e);
-      })
+      pieceArray[(6 * 8) + i] = gltf.asset;
       pawn.scale.set(pieceScale, pieceScale, pieceScale);
       pawn.position.set(-1, 0, 1.4 - (i * squareSize));
       scene.add(pawn)
@@ -172,6 +179,7 @@ function createBlackPieces(scene, loader) {
   for (let i = 0; i < 2; i++) {
     loader.load('./models/black_rook.glb', (gltf) => {
         var rook = gltf.scene;
+        pieceArray[8 * 7 + (i * 7)] = gltf.asset
         rook.scale.set(pieceScale, pieceScale, pieceScale);
         rook.position.set(-1.4, 0, 1.4 - (i*2.8))
         scene.add(rook);
@@ -183,6 +191,7 @@ function createBlackPieces(scene, loader) {
   for (let i = 0; i < 2; i++) {
     loader.load('./models/black_knight.glb', (gltf) => {
       var knight = gltf.scene;
+      pieceArray[8 * 7 + 1 + (i * 5)] = gltf.asset
       knight.scale.set(pieceScale, pieceScale, pieceScale);
       knight.position.set(-1.4, 0, 1 - (i*2))
       scene.add(knight);
@@ -193,26 +202,29 @@ function createBlackPieces(scene, loader) {
   // load bishops
   for (let i = 0; i < 2; i++) {
     loader.load('./models/black_bishop.glb', (gltf) => {
-      var knight = gltf.scene;
-      knight.scale.set(pieceScale, pieceScale, pieceScale);
-      knight.position.set(-1.4, 0, 0.6 - (i*1.2))
-      scene.add(knight);
+      var bishop = gltf.scene;
+      pieceArray[8 * 7 + 2 + (i * 3)] = gltf.asset;
+      bishop.scale.set(pieceScale, pieceScale, pieceScale);
+      bishop.position.set(-1.4, 0, 0.6 - (i*1.2))
+      scene.add(bishop);
     }, undefined, (error) => {
       console.error(error)
     })
   }
   // load king and queen
   loader.load('./models/black_king.glb', (gltf) => {
-      var queen = gltf.scene;
-      queen.scale.set(pieceScale, pieceScale, pieceScale)
-      queen.position.set(-1.4, 0, -0.2)
-      scene.add(queen)
+      var king = gltf.scene;
+      pieceArray[8 * 7 + 4] = gltf.asset
+      king.scale.set(pieceScale, pieceScale, pieceScale)
+      king.position.set(-1.4, 0, -0.2)
+      scene.add(king)
   }, undefined, (error) => {
     console.error(error)
   })
 
   loader.load('./models/black_queen.glb', (gltf) => {
     var queen = gltf.scene;
+    pieceArray[8 * 7 + 3] = gltf.asset
     queen.scale.set(pieceScale, pieceScale, pieceScale)
     queen.position.set(-1.4, 0, 0.2)
     scene.add(queen)
@@ -236,4 +248,10 @@ function initCamera() {
   camera.position.set(0, 0, 5);
   camera.lookAt(0, 0, 0);
   return camera;
+}
+
+function initializeArray(array) {
+  for(let i = 0; i < 64; i++) {
+      pieceArray.push(NaN);
+  }
 }

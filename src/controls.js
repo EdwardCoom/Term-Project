@@ -1,11 +1,13 @@
 import * as THREE from 'three'
 import { Object3D } from 'three';
+import { pieceArray } from './initialization';
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
 
 
 var firstClick = false;
 var pieceClicked = NaN;
+var col, row;
 var pieceMaterial = 0;
 var boardSpaceCoordinates = [
     [new THREE.Vector3(1.4, 0, 1.4), new THREE.Vector3(1.0, 0, 1.4), new THREE.Vector3(0.6, 0, 1.4), new THREE.Vector3(0.2, 0, 1.4), new THREE.Vector3(-0.2, 0, 1.4), new THREE.Vector3(-0.6, 0, 1.4), new THREE.Vector3(-1.0, 0, 1.4), new THREE.Vector3(-1.4, 0, 1.4)],
@@ -34,7 +36,7 @@ export function pickPiece(event, raycaster, camera, scene) {
                 pieceMaterial = intersects[0].object.material.color.clone();
                 intersects[0].object.material.color.set(0x00CC00);
                 pieceClicked = intersects[0].object;
-
+                col, row = whichSquare(intersects[0].point)
             }
             catch (e) {
                 console.warn(e)
@@ -55,8 +57,11 @@ export function pickPiece(event, raycaster, camera, scene) {
         }
         
         var squareC = whichSquare(intersects[0].point);
+        pieceArray[8 * squareC[0] + squareC[1]] = pieceClicked
+        pieceArray[8 * col + row] = NaN
         worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
         pieceClicked = NaN; // unselects piece after move
+        console.log(pieceArray)
     }
 }
 // translates piece (a scene object) to newLoc (world coordinate Vector3)

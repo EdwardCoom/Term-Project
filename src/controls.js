@@ -1,9 +1,10 @@
 import * as THREE from 'three'
-import { Object3D } from 'three';
 import { pieceArray } from './initialization';
+import { checkValidMoves, findPieceSide, Turn} from './util';
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
 
+//  [Move2, move3, move4, move5, move6] b6b5
 
 var firstClick = false;
 var pieceClicked = NaN;
@@ -19,27 +20,32 @@ var boardSpaceCoordinates = [
     [new THREE.Vector3(1.4, 0, -1.0), new THREE.Vector3(1.0, 0, -1.0), new THREE.Vector3(0.6, 0, -1.0), new THREE.Vector3(0.2, 0, -1.0), new THREE.Vector3(-0.2, 0, -1.0), new THREE.Vector3(-0.6, 0, -1.0), new THREE.Vector3(-1.0, 0, -1.0), new THREE.Vector3(-1.4, 0, -1.0)],
     [new THREE.Vector3(1.4, 0, -1.4), new THREE.Vector3(1.0, 0, -1.4), new THREE.Vector3(0.6, 0, -1.4), new THREE.Vector3(0.2, 0, -1.4), new THREE.Vector3(-0.2, 0, -1.4), new THREE.Vector3(-0.6, 0, -1.4), new THREE.Vector3(-1.0, 0, -1.4), new THREE.Vector3(-1.4, 0, -1.4)],
 ];
+var turn = Turn.WhiteTurn;
+var validMoves = []
 
 export function pickPiece(event, raycaster, camera, scene) {
     var mouseX = ( event.clientX / window.innerWidth ) * 2 - 1;
     var mouseY = - ( event.clientY / window.innerHeight ) * 2 + 1;   
 
     //3. compute intersections
-    if(!firstClick) {
-        firstClick = true
+    if(firstClick == false) {
         raycaster.setFromCamera( new THREE.Vector2(mouseX, mouseY), camera ); 
         var intersects = raycaster.intersectObjects(scene.children, true)
-        console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
-
-        if (allowedObjects.includes(intersects[0].object.name)) {  // checks to see if the intersected object is a chess piece
-            try {
-                pieceMaterial = intersects[0].object.material.color.clone();
-                intersects[0].object.material.color.set(0x00CC00);
-                pieceClicked = intersects[0].object;
-                col, row = whichSquare(intersects[0].point)
-            }
-            catch (e) {
-                console.warn(e)
+        if(findPieceSide(intersects[0].object) != undefined && findPieceSide(intersects[0].object) == turn) {
+            firstClick = true
+            checkValidMoves(intersects[0].object, validMoves)
+            console.log(validMoves)
+            console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
+            if (allowedObjects.includes(intersects[0].object.name)) {  // checks to see if the intersected object is a chess piece
+                try {
+                    pieceMaterial = intersects[0].object.material.color.clone();
+                    intersects[0].object.material.color.set(0x00CC00);
+                    pieceClicked = intersects[0].object;
+                    [col, row] = whichSquare(intersects[0].point)
+                }
+                catch (e) {
+                    console.warn(e)
+                }
             }
         }
     }
@@ -48,22 +54,34 @@ export function pickPiece(event, raycaster, camera, scene) {
         raycaster.setFromCamera( new THREE.Vector2(mouseX, mouseY), camera ); 
         var intersects = raycaster.intersectObjects(scene.children, true);
         console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
-
-        try {
-            pieceClicked.material.color.set(pieceMaterial.getHex())
-        }
-        catch (e) {
-            console.warn(e)
-        }
-        
         var squareC = whichSquare(intersects[0].point);
-        pieceArray[8 * squareC[0] + squareC[1]] = pieceClicked
-        pieceArray[8 * col + row] = NaN
-        worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
-        pieceClicked = NaN; // unselects piece after move
+        if(pieceArray[(8 * squareC[1]) + squareC[0]] == undefined) {            
+            pieceArray[(8 * squareC[1]) + squareC[0]] = pieceClicked
+            pieceArray[(8 * row) + col] = undefined
+            worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked);
+            console.log(pieceArray)
+            swapTurn()
+        }
+        else if (pieceArray[(8 * squareC[1]) + squareC[0]] != undefined && findPieceSide(pieceArray[(8 * squareC[1]) + squareC[0]]) != findPieceSide(pieceClicked)) {
+            var temp = pieceArray[(8 * squareC[1]) + squareC[0]];
+            console.log(findPieceSide(pieceClicked))
+            console.log(findPieceSide(temp))
+            pieceArray[(8 * squareC[1]) + squareC[0]] = pieceClicked;
+            scene.remove(temp.parent);
+            worldVectorTranslate(boardSpaceCoordinates[squareC[0]][squareC[1]], pieceClicked)
+            console.log(temp.material)
+            swapTurn()
+        }
+        pieceClicked.material.color.set(pieceMaterial.getHex())
         console.log(pieceArray)
+        pieceClicked = NaN; // unselects piece after move
     }
 }
+
+function swapTurn() {
+    turn = -turn
+}
+
 // translates piece (a scene object) to newLoc (world coordinate Vector3)
 // newLoc can be the point from a raycast, and piece can be pieceClicked
 ////////// Some notes for the sake of the group
@@ -83,7 +101,7 @@ function worldVectorTranslate(newLoc, piece){
 // returns array location of chess square at location of vector in world space.
 // Returns an array with the column, then row, as different values
 // for example, the square b3 would return [1, 2]
-function whichSquare(V){
+export function whichSquare(V){
     // how far past the line you have to click
     var epsilon = .01;
     var row, col;

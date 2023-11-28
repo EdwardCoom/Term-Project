@@ -267,5 +267,10 @@ export function whichSquare(V){
 }
 export function resetSelection() {
     firstClick = !firstClick
-    pieceClicked.material.color.set(pieceMaterial.getHex())
+    try {
+        pieceClicked.material.color.set(pieceMaterial.getHex())
+    }
+    catch (e){
+        console.warn(e)
+    }
 }

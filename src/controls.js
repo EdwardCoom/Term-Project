@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import {pieceArray } from './initialization';
 import { checkValidMoves, findPieceSide, Turn} from './util';
+import { Difficulty, Mode, requestBuilder, sendRequest } from './stockfish';
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
 
@@ -13,7 +14,9 @@ var firstMoveOfGame = true;
 let defaultBoardState = [];
 var col, row;
 var pieceMaterial = 0;
-var boardSpaceCoordinates = [
+export var halfMoveClock = 0;
+export var fullMoveClock = 1;
+export var boardSpaceCoordinates = [
     [new THREE.Vector3(1.4, 0, 1.4), new THREE.Vector3(1.0, 0, 1.4), new THREE.Vector3(0.6, 0, 1.4), new THREE.Vector3(0.2, 0, 1.4), new THREE.Vector3(-0.2, 0, 1.4), new THREE.Vector3(-0.6, 0, 1.4), new THREE.Vector3(-1.0, 0, 1.4), new THREE.Vector3(-1.4, 0, 1.4)],
     [new THREE.Vector3(1.4, 0, 1.0), new THREE.Vector3(1.0, 0, 1.0), new THREE.Vector3(0.6, 0, 1.0), new THREE.Vector3(0.2, 0, 1.0), new THREE.Vector3(-0.2, 0, 1.0), new THREE.Vector3(-0.6, 0, 1.0), new THREE.Vector3(-1.0, 0, 1.0), new THREE.Vector3(-1.4, 0, 1.0)],
     [new THREE.Vector3(1.4, 0, 0.6), new THREE.Vector3(1.0, 0, 0.6), new THREE.Vector3(0.6, 0, 0.6), new THREE.Vector3(0.2, 0, 0.6), new THREE.Vector3(-0.2, 0, 0.6), new THREE.Vector3(-0.6, 0, 0.6), new THREE.Vector3(-1.0, 0, 0.6), new THREE.Vector3(-1.4, 0, 0.6)],
@@ -23,7 +26,7 @@ var boardSpaceCoordinates = [
     [new THREE.Vector3(1.4, 0, -1.0), new THREE.Vector3(1.0, 0, -1.0), new THREE.Vector3(0.6, 0, -1.0), new THREE.Vector3(0.2, 0, -1.0), new THREE.Vector3(-0.2, 0, -1.0), new THREE.Vector3(-0.6, 0, -1.0), new THREE.Vector3(-1.0, 0, -1.0), new THREE.Vector3(-1.4, 0, -1.0)],
     [new THREE.Vector3(1.4, 0, -1.4), new THREE.Vector3(1.0, 0, -1.4), new THREE.Vector3(0.6, 0, -1.4), new THREE.Vector3(0.2, 0, -1.4), new THREE.Vector3(-0.2, 0, -1.4), new THREE.Vector3(-0.6, 0, -1.4), new THREE.Vector3(-1.0, 0, -1.4), new THREE.Vector3(-1.4, 0, -1.4)],
 ];
-var turn = Turn.WhiteTurn;
+export var turn = Turn.WhiteTurn;
 var validMoves = []
 
 export function pickPiece(event, raycaster, camera, scene) {
@@ -58,6 +61,7 @@ export function pickPiece(event, raycaster, camera, scene) {
         }
     }
     else {
+        
         firstClick = false;
         raycaster.setFromCamera( new THREE.Vector2(mouseX, mouseY), camera ); 
         var intersects = raycaster.intersectObjects(scene.children, true);
@@ -87,22 +91,49 @@ export function pickPiece(event, raycaster, camera, scene) {
         }  */
         // If you'd like to switch to previous implementation, uncomment block above and comment this line below
         makeMoveFromPiece(pieceClicked, squareC, row, col, scene);
-
         pieceClicked.material.color.set(pieceMaterial.getHex())
         //console.log(pieceArray)
         pieceClicked = NaN; // unselects piece after move
+        var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Easy, Mode.Move)
+        sendRequest(req, scene)
     }
 }
 
-function swapTurn() {
-    turn = -turn
+export function createBoardStateArray() {
+    let boardState = [];
+    for(const mesh of pieceArray) {
+        if(mesh != undefined) {
+            boardState.push(mesh.name);
+        }
+        else {
+            boardState.push(undefined)
+        }
+    }
+    return boardState.reverse()
+}
+
+export function swapTurn(updateHalfmove) {
+    if(turn === Turn.WhiteTurn) {
+        turn = Turn.BlackTurn
+    }
+    else {
+        turn = Turn.WhiteTurn
+        fullMoveClock += 1;
+    }
+    if (updateHalfmove) {
+        halfMoveClock += 1;
+    }
+    else {
+        halfMoveClock = 0;
+    }
+
 }
 
 // logic for making a move seperated into its own function
 // Makes relevant updates to the pieceArray
 // squareC is the board location where the piece will move
 // pieceClicked is the currently selected piece that will be moving
-function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
+export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
     console.log(pieceClicked);
     if(pieceArray[(8 * squareC[1]) + squareC[0]] == undefined) {            
         pieceArray[(8 * squareC[1]) + squareC[0]] = pieceClicked
@@ -111,7 +142,7 @@ function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
         // move pieces where needed from updated piecesArray
         renderFromBoardStateArray();
 
-        swapTurn()
+        swapTurn(true)
     }
     else if (pieceArray[(8 * squareC[1]) + squareC[0]] != undefined && findPieceSide(pieceArray[(8 * squareC[1]) + squareC[0]]) != findPieceSide(pieceClicked)) {
         var temp = pieceArray[(8 * squareC[1]) + squareC[0]];
@@ -129,7 +160,7 @@ function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
         // move pieces where needed from updated piecesArray
         renderFromBoardStateArray();
 
-        swapTurn()
+        swapTurn(false)
     }
 }
 // Makes a move from one space to another. Doesn't check if it's legal. Updates pieceArray accordingly
@@ -154,7 +185,7 @@ function makeMoveFromBoard(fromSpace, toSpace, scene){
             // console.log(pieceClicked.matrixWorld[13]);
             // unfortunately, you can't seem to edit this directly, or our job would be easy. Let me know if you figure it out.
             // instead, I calculate the transformation in the world space and convert it to local space, then do a local space transformation.
-function worldVectorTranslate(newLoc, piece){
+export function worldVectorTranslate(newLoc, piece){
     var V = new THREE.Vector3(newLoc.x - piece.matrixWorld.elements[12], 0, newLoc.z - piece.matrixWorld.elements[14]);
     // 1 in local space is .25 in world space (at least on my computer. This may not be transferable)
     piece.position.x += V.x * 4;

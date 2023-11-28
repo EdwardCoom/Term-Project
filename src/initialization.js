@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {Difficulty, Mode, requestBuilder, sendRequest} from './stockfish.js'
+import {turn} from './controls.js'
 
 const pieceScale = 0.25
 const squareSize = 0.4
@@ -21,7 +22,7 @@ export function createChessEnvironment(scene) {
   createWhitePieces(scene, loader)
   createBlackPieces(scene, loader)
   console.log(pieceArray)
-  var res = requestBuilder(pieceArray, Difficulty.Easy, Mode.Move) // running into problems transferring data.
+  var res = requestBuilder(pieceArray, turn, Difficulty.Easy, Mode.Move) // running into problems transferring data.
   console.log(res);
 }
 

@@ -32,26 +32,41 @@ export var boardSpaceCoordinates = [
 ];
 
 var whiteTakenCoordinates = [
-    new THREE.Vector3(1.60, -.2, -2.25),
-    new THREE.Vector3(1.30, -.2, -2.25),
-    new THREE.Vector3(1.0, -.2, -2.25),
-    new THREE.Vector3(.7, -.2, -2.25),
-    new THREE.Vector3(.4, -.2, -2.25),
-    new THREE.Vector3(.1, -.2, -2.25),
-    new THREE.Vector3(1.6, -.2, -2.25),
-    new THREE.Vector3(1.3, -.2, -2.25),
-    new THREE.Vector3(1.0, -.2, -2.25),
-    new THREE.Vector3(0.7, -.2, -2.25),
-    new THREE.Vector3(.4, -.2, -2.25),
-    new THREE.Vector3(.1, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25)
+    new THREE.Vector3(1.6, -.2, -2.2),
+    new THREE.Vector3(1.3, -.2, -2.2),
+    new THREE.Vector3(1.0, -.2, -2.2),
+    new THREE.Vector3(.7, -.2, -2.2),
+    new THREE.Vector3(.4, -.2, -2.2),
+    new THREE.Vector3(.1, -.2, -2.2),
+    new THREE.Vector3(1.6, -.2, -2.5),
+    new THREE.Vector3(1.3, -.2, -2.5),
+    new THREE.Vector3(1.0, -.2, -2.5),
+    new THREE.Vector3(0.7, -.2, -2.5),
+    new THREE.Vector3(.4, -.2, -2.5),
+    new THREE.Vector3(.1, -.2, -2.5),
+    new THREE.Vector3(1.6, -.2, -2.8),
+    new THREE.Vector3(1.3, -.2, -2.8),
+    new THREE.Vector3(1.0, -.2, -2.8),
+    new THREE.Vector3(.7, -.2, -2.8)
 ];
 
 var blackTakenCoordinates = [
-    new THREE.Vector3(-1.6493277399604634, -.2, -2.2587288011111673)
+    new THREE.Vector3(-1.6, -.2, -2.2),
+    new THREE.Vector3(-1.3, -.2, -2.2),
+    new THREE.Vector3(-1.0, -.2, -2.2),
+    new THREE.Vector3(-.7, -.2, -2.2),
+    new THREE.Vector3(-.4, -.2, -2.2),
+    new THREE.Vector3(-.1, -.2, -2.2),
+    new THREE.Vector3(-1.6, -.2, -2.5),
+    new THREE.Vector3(-1.3, -.2, -2.5),
+    new THREE.Vector3(-1.0, -.2, -2.5),
+    new THREE.Vector3(-0.7, -.2, -2.5),
+    new THREE.Vector3(-.4, -.2, -2.5),
+    new THREE.Vector3(-.1, -.2, -2.5),
+    new THREE.Vector3(-1.6, -.2, -2.8),
+    new THREE.Vector3(-1.3, -.2, -2.8),
+    new THREE.Vector3(-1.0, -.2, -2.8),
+    new THREE.Vector3(-.7, -.2, -2.8)
 ];
 
 // Array to remember white taken pieces

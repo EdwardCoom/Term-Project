@@ -1,4 +1,4 @@
-import { fullMoveClock, halfMoveClock, worldVectorTranslate, boardSpaceCoordinates, swapTurn, makeMoveFromPiece} from "./controls";
+import { fullMoveClock, halfMoveClock, worldVectorTranslate, boardSpaceCoordinates, swapTurn, makeMoveFromPiece, renderFromBoardStateArray, turn, changeClock, removeFromTaken, undoBoardState} from "./controls";
 import { pieceArray } from "./initialization";
 import {Turn, findPieceSide} from './util'
 
@@ -18,10 +18,29 @@ const pieceMap = new Map([
     ['king000', 'k']
 ]);
 
-class Square {
+export class Square {
     constructor(row, col) {
         this.row = row;
         this.col = col;
+    }
+}
+
+export class Move {
+    constructor(start, end, halfMoveClock, fullMoveClock, pieceTaken = undefined) {
+        this.start = start;
+        this.end = end;
+        this.pieceTaken = pieceTaken;
+        this.halfMoveClock = halfMoveClock;
+        this.fullMoveClock = fullMoveClock;
+    }
+
+    undo() {
+        undoBoardState(this.start, this.end, this.pieceTaken)
+        changeClock(this.fullMoveClock, this.halfMoveClock)
+        swapTurn(false)
+        removeFromTaken(this.pieceTaken)
+        renderFromBoardStateArray();
+        console.log(pieceArray)
     }
 }
 

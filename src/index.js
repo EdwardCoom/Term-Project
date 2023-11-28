@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {createChessEnvironment, initCanvasBasics, initLighting} from './initialization.js';
-import { pickPiece, resetSelection, turn, toggleAi, ai} from './controls.js';
+import { pickPiece, resetSelection, turn, toggleAi, ai, undoStack} from './controls.js';
 import {renderAtScale} from './util.js';
 
 // Debug variables
@@ -103,7 +103,15 @@ window.onload = function init()
         console.log(ai);
     }
 
-    document.getElementById("UndoMove").onclick = function() {}  /// TODO
+    document.getElementById("UndoMove").onclick = function() {
+        try {
+            undoStack[undoStack.length - 1].undo();
+            undoStack.pop()
+        }
+        catch (e) {
+            console.log(`No more undos allowed\n${e}`)
+        }
+    }  /// TODO
 
     document.getElementById("NewGame").onclick = function() {window.location.reload();}
     
@@ -138,4 +146,3 @@ function callSelection(e, raycaster, camera, scene) {
         resetSelection()
     }
 }
-

@@ -1,10 +1,11 @@
 import * as THREE from 'three'
 import {pieceArray } from './initialization';
 import { checkValidMoves, findPieceSide, Turn, pieceSideMap} from './util';
-import { Difficulty, Mode, requestBuilder, sendRequest } from './stockfish';
+import { Difficulty, Mode, requestBuilder, sendRequest, Move, Square } from './stockfish';
+
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
-
+export var undoStack = []
 //AI toggle variable and function
 export let ai = false;
 export function toggleAi(){ai = !ai};
@@ -62,6 +63,23 @@ var blackTaken = [];
 
 export var turn = Turn.WhiteTurn;
 var validMoves = []
+
+export function removeFromTaken(Mesh) {
+    console.log(blackTaken, whiteTaken);
+    try {
+        whiteTaken.splice(whiteTaken.indexOf(Mesh), 1)
+        blackTaken.splice(blackTaken.indexOf(Mesh), 1)
+    }
+    catch (e) {
+        console.warn(e)
+    }
+    console.log(blackTaken, whiteTaken)
+}
+
+export function changeClock(full, half) {
+    halfMoveClock = half;
+    fullMoveClock = full
+}
 
 export function pickPiece(event, raycaster, camera, scene) {
     // start of the game version of the board
@@ -173,16 +191,18 @@ export function swapTurn(updateHalfmove) {
 // pieceClicked is the currently selected piece that will be moving
 export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
     //console.log(pieceClicked);
-    if(pieceArray[(8 * squareC[1]) + squareC[0]] == undefined) {            
+    if(pieceArray[(8 * squareC[1]) + squareC[0]] == undefined) {   
+        let move = new Move(new Square(row, col), new Square(squareC[1], squareC[0]), halfMoveClock, fullMoveClock)         
         pieceArray[(8 * squareC[1]) + squareC[0]] = pieceClicked
         pieceArray[(8 * row) + col] = undefined
 
         // move pieces where needed from updated piecesArray
         renderFromBoardStateArray();
-
+        addMove(move)
         swapTurn(true)
     }
     else if (pieceArray[(8 * squareC[1]) + squareC[0]] != undefined && findPieceSide(pieceArray[(8 * squareC[1]) + squareC[0]]) != findPieceSide(pieceClicked)) {
+        let move = new Move(new Square(row, col), new Square(squareC[1], squareC[0]), halfMoveClock, fullMoveClock, pieceArray[8 * squareC[1] + squareC[0]])
         var temp = pieceArray[(8 * squareC[1]) + squareC[0]];
 
         // piece is moved to new spot in pieceArray
@@ -207,7 +227,7 @@ export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
 
         // move pieces where needed from updated piecesArray
         renderFromBoardStateArray();
-
+        addMove(move)
         swapTurn(false)
     }
 }
@@ -242,7 +262,7 @@ export function worldVectorTranslate(newLoc, piece){
 }
 
 // moves each piece to their appropriate position from the pieceArray (try to use this instead of calling worldVectorTranslate directly)
-function renderFromBoardStateArray(){
+export function renderFromBoardStateArray(){
     for (var i = 0; i < pieceArray.length; i++){
         if (pieceArray[i] != undefined){
             var space = [i % 8, Math.floor(i / 8)];
@@ -327,5 +347,17 @@ export function resetSelection() {
     }
     catch (e){
         console.warn(e)
+    }
+}
+
+export function undoBoardState(start, end, pieceTaken) {
+    pieceArray[8 * start.row + start.col] = pieceArray[8 * end.row + end.col]
+    pieceArray[8 * end.row + end.col] = pieceTaken
+}
+
+function addMove(Move) {
+    undoStack.push(Move);
+    if(undoStack.length > 10) {
+        undoStack.splice(0, 1)
     }
 }

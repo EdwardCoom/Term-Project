@@ -2,6 +2,7 @@
 <html>
 <head>
   <link rel="stylesheet" href=info.css>
+  <script src="menu.js" defer></script>
 <style>
   body {
     margin: 0;
@@ -13,7 +14,42 @@
 </head>
 
 <body>
-  <button id="UNDO" class="undoButton">Undo Move</button>
+
+  <!-- the header was asthetically pleasing but altered the accuracy of the piece picking -->
+  <!-- <div class="header"> -->
+    
+    <div class="dropdown" data-dropdown>
+     <button class="link1" data-dropdown-button>Options</button>
+     <div class="dropdown-menu1">
+      <div>
+        <div class="dropdown-heading">Perspectives</div>
+        <div class="dropdown-links">
+          <button id="FLook" class="button">Free Look</button>
+          <button id="TBased" class="button">Turn Based</button>
+          <button id="White" class="button">White</button>
+          <button id="Black" class="button">Black</button>
+          <button id="Side" class="button">Side View</button>
+        </div>
+      </div>
+      <div>
+        <div class="dropdown-heading">Game Options</div>
+        <div class="dropdown-links">
+          <button id="UndoMove" class="button">Undo Move</button>
+          <button id="NewGame" class="button">New Game</button>
+        </div>
+      </div>
+     </div>
+    </div>
+    
+    <!-- An extra menu option if we need it. -->
+    <!-- <div class="dropdown" data-dropdown>
+      <button class="link2" data-dropdown-button>Options2</button>
+     <div class="dropdown-menu2">
+      Dropdown Content
+     </div>
+    </div> -->
+
+
   <script type="module" src="./index.js"></script>
 </body>
 </html>

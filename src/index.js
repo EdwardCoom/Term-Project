@@ -1,12 +1,15 @@
 import * as THREE from 'three';
 import {createChessEnvironment, initCanvasBasics, initLighting} from './initialization.js';
-import { pickPiece, resetSelection } from './controls.js';
+import { pickPiece, resetSelection, turn } from './controls.js';
 import {renderAtScale} from './util.js';
 
 // Debug variables
 var x = 0;
 var y = 0;
 var z = 0;
+
+// Camera View Variable
+var turnBased = false;
 
 
 window.onload = function init()
@@ -25,6 +28,10 @@ window.onload = function init()
 
     renderer.domElement.addEventListener('mousedown', (e) => {
         callSelection(e, raycaster, camera, scene);
+
+        console.log(turn)
+        if(turnBased)
+        turnBasedCam(turn)
     })
 
     renderer.domElement.addEventListener('mouseup', (e) => {
@@ -51,7 +58,55 @@ window.onload = function init()
     
 
     initLighting(scene, renderer);
+
+    document.getElementById("FLook").onclick = function() { 
+        turnBased = false;
+        controls.enabled = true;
+        controls.update();
+    }
+
+    document.getElementById("TBased").onclick = function() {
+        turnBased = true;
+        controls.enabled = false;
+        turnBasedCam(turn)
     
+    }
+    document.getElementById("White").onclick = function() {
+        turnBased = false;
+        controls.enabled = false;
+        camera.position.set(1.5736608853190526, 4.977554559408481, 0.006482756258023483);
+        camera.lookAt(0, 0, 0);
+    }
+
+    document.getElementById("Black").onclick = function() {
+        turnBased = false;
+        controls.enabled = false;
+        camera.position.set(-2.003134992867659, 4.820781969087748, -0.003377405452138519);
+        camera.lookAt(0, 0, 0);
+    }
+
+    document.getElementById("Side").onclick = function() {
+        turnBased = false;
+        controls.enabled = false;
+        camera.position.set(1.259335725318013, 6.1517165739009805, 7.341964614747079);
+        camera.lookAt(0, 0, 0);
+    }
+
+    document.getElementById("UndoMove").onclick = function() {}  /// TODO
+
+    document.getElementById("NewGame").onclick = function() {window.location.reload();}
+    
+    function turnBasedCam(turn) {
+        if (turn === 1) {
+            camera.position.set(1.5736608853190526, 4.977554559408481, 0.006482756258023483);
+            camera.lookAt(0, 0, 0);
+        }
+        else if (turn === -1 ) {
+            camera.position.set(-2.003134992867659, 4.820781969087748, -0.003377405452138519);
+            camera.lookAt(0, 0, 0);
+        }
+    }
+
     function animate() {
         requestAnimationFrame( animate );
         controls.update();
@@ -72,5 +127,4 @@ function callSelection(e, raycaster, camera, scene) {
         resetSelection()
     }
 }
-
 

@@ -1,9 +1,13 @@
 import * as THREE from 'three'
 import {pieceArray } from './initialization';
-import { checkValidMoves, findPieceSide, Turn} from './util';
+import { checkValidMoves, findPieceSide, Turn, pieceSideMap} from './util';
 import { Difficulty, Mode, requestBuilder, sendRequest } from './stockfish';
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
+
+//AI toggle variable and function
+export let ai = false;
+export function toggleAi(){ai = !ai};
 
 //  [Move2, move3, move4, move5, move6] b6b5
 
@@ -26,6 +30,36 @@ export var boardSpaceCoordinates = [
     [new THREE.Vector3(1.4, 0, -1.0), new THREE.Vector3(1.0, 0, -1.0), new THREE.Vector3(0.6, 0, -1.0), new THREE.Vector3(0.2, 0, -1.0), new THREE.Vector3(-0.2, 0, -1.0), new THREE.Vector3(-0.6, 0, -1.0), new THREE.Vector3(-1.0, 0, -1.0), new THREE.Vector3(-1.4, 0, -1.0)],
     [new THREE.Vector3(1.4, 0, -1.4), new THREE.Vector3(1.0, 0, -1.4), new THREE.Vector3(0.6, 0, -1.4), new THREE.Vector3(0.2, 0, -1.4), new THREE.Vector3(-0.2, 0, -1.4), new THREE.Vector3(-0.6, 0, -1.4), new THREE.Vector3(-1.0, 0, -1.4), new THREE.Vector3(-1.4, 0, -1.4)],
 ];
+
+var whiteTakenCoordinates = [
+    new THREE.Vector3(1.60, -.2, -2.25),
+    new THREE.Vector3(1.30, -.2, -2.25),
+    new THREE.Vector3(1.0, -.2, -2.25),
+    new THREE.Vector3(.7, -.2, -2.25),
+    new THREE.Vector3(.4, -.2, -2.25),
+    new THREE.Vector3(.1, -.2, -2.25),
+    new THREE.Vector3(1.6, -.2, -2.25),
+    new THREE.Vector3(1.3, -.2, -2.25),
+    new THREE.Vector3(1.0, -.2, -2.25),
+    new THREE.Vector3(0.7, -.2, -2.25),
+    new THREE.Vector3(.4, -.2, -2.25),
+    new THREE.Vector3(.1, -.2, -2.25),
+    new THREE.Vector3(1.4, -.2, -2.25),
+    new THREE.Vector3(1.4, -.2, -2.25),
+    new THREE.Vector3(1.4, -.2, -2.25),
+    new THREE.Vector3(1.4, -.2, -2.25)
+];
+
+var blackTakenCoordinates = [
+    new THREE.Vector3(-1.6493277399604634, -.2, -2.2587288011111673)
+];
+
+// Array to remember white taken pieces
+var whiteTaken = [];
+
+// Array to remember black taken pieces
+var blackTaken = [];
+
 export var turn = Turn.WhiteTurn;
 var validMoves = []
 
@@ -47,7 +81,7 @@ export function pickPiece(event, raycaster, camera, scene) {
             checkValidMoves(intersects[0].object, validMoves)
             //console.log(validMoves)
             //console.log(intersects[0].object); // Shows what object was clicked in console for debugging purposes
-            if (allowedObjects.includes(intersects[0].object.name)) {  // checks to see if the intersected object is a chess piece
+            if (allowedObjects.includes(intersects[0].object.name) && !whiteTaken.includes(intersects[0].object) && !blackTaken.includes(intersects[0].object)) {  // checks to see if the intersected object is a chess piece
                 try {
                     pieceMaterial = intersects[0].object.material.color.clone();
                     intersects[0].object.material.color.set(0x00CC00);
@@ -94,8 +128,12 @@ export function pickPiece(event, raycaster, camera, scene) {
         pieceClicked.material.color.set(pieceMaterial.getHex())
         //console.log(pieceArray)
         pieceClicked = NaN; // unselects piece after move
-        var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Easy, Mode.Move)
-        sendRequest(req, scene)
+        
+        // AI toggle logic
+        if(ai === true) {
+            var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Easy, Mode.Move)
+            sendRequest(req, scene)
+        }
     }
 }
 
@@ -134,7 +172,7 @@ export function swapTurn(updateHalfmove) {
 // squareC is the board location where the piece will move
 // pieceClicked is the currently selected piece that will be moving
 export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
-    console.log(pieceClicked);
+    //console.log(pieceClicked);
     if(pieceArray[(8 * squareC[1]) + squareC[0]] == undefined) {            
         pieceArray[(8 * squareC[1]) + squareC[0]] = pieceClicked
         pieceArray[(8 * row) + col] = undefined
@@ -152,7 +190,17 @@ export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
 
         // Remove duplicate copy of now moved piece
         pieceArray[(8 * row) + col] = undefined;
-        scene.remove(temp.parent);
+
+        if (findPieceSide(pieceClicked) === -1){
+            console.log("white piece taken");
+            whiteTaken.push(temp);
+            console.log(whiteTaken);
+        }
+        else {
+            console.log("black piece taken");
+            blackTaken.push(temp);
+        }
+        //scene.remove(temp.parent);
 
         // remove taken piece from piece array
         //pieceArray[(8 * squareC[1]) + squareC[0]] = undefined;
@@ -186,9 +234,10 @@ function makeMoveFromBoard(fromSpace, toSpace, scene){
             // unfortunately, you can't seem to edit this directly, or our job would be easy. Let me know if you figure it out.
             // instead, I calculate the transformation in the world space and convert it to local space, then do a local space transformation.
 export function worldVectorTranslate(newLoc, piece){
-    var V = new THREE.Vector3(newLoc.x - piece.matrixWorld.elements[12], 0, newLoc.z - piece.matrixWorld.elements[14]);
+    var V = new THREE.Vector3(newLoc.x - piece.matrixWorld.elements[12], newLoc.y - piece.matrixWorld.elements[13], newLoc.z - piece.matrixWorld.elements[14]);
     // 1 in local space is .25 in world space (at least on my computer. This may not be transferable)
     piece.position.x += V.x * 4;
+    piece.position.y += V.y * 4;
     piece.position.z += V.z * 4;
 }
 
@@ -199,6 +248,12 @@ function renderFromBoardStateArray(){
             var space = [i % 8, Math.floor(i / 8)];
             worldVectorTranslate(boardSpaceCoordinates[space[0]][space[1]], pieceArray[i]);
         }
+    }
+    for (var i = 0; i < whiteTaken.length; i++){
+        worldVectorTranslate(whiteTakenCoordinates[i], whiteTaken[i]);
+    }
+    for (var i = 0; i < blackTaken.length; i++){
+        worldVectorTranslate(blackTakenCoordinates[i], blackTaken[i]);
     }
 }
 // returns array location of chess square at location of vector in world space.

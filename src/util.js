@@ -24,7 +24,7 @@ const pieceType = Object.freeze({
     King: 0,
 })
 
-const pieceSideMap = new Map([
+export const pieceSideMap = new Map([
     ['Pawn005', Side.White],
     ['Knight003', Side.White],
     ['bishop003', Side.White],

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {createChessEnvironment, initCanvasBasics, initLighting} from './initialization.js';
-import { pickPiece, resetSelection, turn } from './controls.js';
+import { pickPiece, resetSelection, turn, toggleAi, ai} from './controls.js';
 import {renderAtScale} from './util.js';
 
 // Debug variables
@@ -90,6 +90,17 @@ window.onload = function init()
         controls.enabled = false;
         camera.position.set(1.259335725318013, 6.1517165739009805, 7.341964614747079);
         camera.lookAt(0, 0, 0);
+    }
+
+    document.getElementById("ToggleAi").onclick = function() {
+        toggleAi();
+
+        turnBased = false;
+        controls.enabled = false;
+        camera.position.set(1.5736608853190526, 4.977554559408481, 0.006482756258023483);
+        camera.lookAt(0, 0, 0);
+
+        console.log(ai);
     }
 
     document.getElementById("UndoMove").onclick = function() {}  /// TODO

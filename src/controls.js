@@ -5,6 +5,10 @@ import { Difficulty, Mode, requestBuilder, sendRequest } from './stockfish';
 
 const allowedObjects = ['Pawn006', 'Rook004', 'Knight', 'bishop002', 'queeen', 'king000', 'Pawn005', 'Rook001', 'Knight003', 'bishop003', 'queeen001', 'king001']
 
+//AI toggle variable and function
+export let ai = false;
+export function toggleAi(){ai = !ai};
+
 //  [Move2, move3, move4, move5, move6] b6b5
 
 var firstClick = false;
@@ -94,8 +98,12 @@ export function pickPiece(event, raycaster, camera, scene) {
         pieceClicked.material.color.set(pieceMaterial.getHex())
         //console.log(pieceArray)
         pieceClicked = NaN; // unselects piece after move
-        var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Easy, Mode.Move)
-        sendRequest(req, scene)
+        
+        // AI toggle logic
+        if(ai === true) {
+            var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Easy, Mode.Move)
+            sendRequest(req, scene)
+        }
     }
 }
 

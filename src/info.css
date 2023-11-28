@@ -1,15 +1,149 @@
-button {
-	-webkit-appearance: none;	
+.button {
+	/* -webkit-appearance: none; */
+	border: none !important;
+	background: none !important;
+	padding: 0;
+	color: whitesmoke;	
 	font-family: Courier;
-	font-size: 19pt;
+	font-size: 13pt;
 	text-align: center;
-	position: absolute;
-	min-width: 80px;
 	border-radius: 0;
-	z-index: 1;
+	cursor: pointer;
+	/* z-index: 1; */
 }
 
-.undoButton {
+.button:hover {
+	color: rgb(180, 12, 12);
+}
+
+/*.undoButton {
 	right: 20px;
 	top: 10px;
-}
+} */
+
+body {
+	margin: 0;
+  }
+  
+  /* .header {
+	position: relative;
+	background-color: #201f1f;
+	display: flex;
+	align-items: baseline;
+	padding: .5rem;
+	gap: 1rem;
+  } */
+  
+  .link1 {
+	position: absolute;
+	-webkit-appearance: none;
+	background: none;
+	border: none;
+	text-decoration: none;
+	color: #0c0c0c;
+	font-family: Courier;
+	font-size: 15pt;
+	left: 15px;
+	cursor: pointer;
+	padding: 0;
+  } 
+  
+  .dropdown.active > link,
+  .link1:hover {
+	color: rgb(180, 12, 12);
+  }
+
+  .link2 {
+	position: absolute;
+	-webkit-appearance: none;
+	background: none;
+	border: none;
+	text-decoration: none;
+	color: #0c0c0c;
+	font-family: Courier;
+	font-size: 15pt;
+	cursor: pointer;
+	padding: 0;
+	left: 115px;
+	cursor: pointer;
+	
+  } 
+  
+  .dropdown.active > link,
+  .link2:hover {
+	color: rgb(180, 12, 12);
+  }
+
+
+  .dropdown {
+	
+	position: relative;
+  }
+
+  .dropdown-menu1 {
+	position: absolute;
+	left: 15px;
+	top: calc(100% + 1.5rem);
+	color: whitesmoke;
+	background-color: #0c0c0c;
+	padding: .75rem;
+	border-radius: .25rem;
+
+	/* we can change opacity of the shadow with the alpha value */
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .3); 
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-10px);
+	transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  }
+
+  .dropdown-heading {
+	color: whitesmoke;	
+	font-family: Courier;
+	font-size: 15pt;
+	text-align: center;
+	text-decoration: underline;
+	margin-bottom: .5rem;
+
+  }
+
+  .dropdown-menu2 {
+	position: absolute;
+	left: 115px;
+	top: calc(100% + 1.5rem);
+	color: whitesmoke;
+	background-color: #0c0c0c;
+	padding: .75rem;
+	border-radius: .25rem;
+
+	/* we can change opacity of the shadow with the alpha value */
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .3); 
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-10px);
+	transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  }
+
+  .dropdown.active > .link1 + .dropdown-menu1 {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+  }
+
+  .dropdown.active > .link2 + .dropdown-menu2 {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+  }
+
+  .information-grid {
+	display: grid;
+	grid-template-columns: repeat(2, max-content);
+	gap: 2rem;
+  }
+  
+  .dropdown-links {
+	display: flex;
+	flex-direction: column;
+	gap: .25rem;
+  }

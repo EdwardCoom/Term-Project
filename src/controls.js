@@ -206,10 +206,11 @@ export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
         // Remove duplicate copy of now moved piece
         pieceArray[(8 * row) + col] = undefined;
 
+        // taking logic, pushes the piece into whiteTaken or blackTaken depending on piece side
         if (findPieceSide(pieceClicked) === -1){
             console.log("white piece taken");
             whiteTaken.push(temp);
-            console.log(whiteTaken);
+            //console.log(whiteTaken);
         }
         else {
             console.log("black piece taken");

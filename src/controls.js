@@ -33,26 +33,41 @@ export var boardSpaceCoordinates = [
 ];
 
 var whiteTakenCoordinates = [
-    new THREE.Vector3(1.60, -.2, -2.25),
-    new THREE.Vector3(1.30, -.2, -2.25),
-    new THREE.Vector3(1.0, -.2, -2.25),
-    new THREE.Vector3(.7, -.2, -2.25),
-    new THREE.Vector3(.4, -.2, -2.25),
-    new THREE.Vector3(.1, -.2, -2.25),
-    new THREE.Vector3(1.6, -.2, -2.25),
-    new THREE.Vector3(1.3, -.2, -2.25),
-    new THREE.Vector3(1.0, -.2, -2.25),
-    new THREE.Vector3(0.7, -.2, -2.25),
-    new THREE.Vector3(.4, -.2, -2.25),
-    new THREE.Vector3(.1, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25),
-    new THREE.Vector3(1.4, -.2, -2.25)
+    new THREE.Vector3(1.6, -.2, -2.2),
+    new THREE.Vector3(1.3, -.2, -2.2),
+    new THREE.Vector3(1.0, -.2, -2.2),
+    new THREE.Vector3(.7, -.2, -2.2),
+    new THREE.Vector3(.4, -.2, -2.2),
+    new THREE.Vector3(.1, -.2, -2.2),
+    new THREE.Vector3(1.6, -.2, -2.5),
+    new THREE.Vector3(1.3, -.2, -2.5),
+    new THREE.Vector3(1.0, -.2, -2.5),
+    new THREE.Vector3(0.7, -.2, -2.5),
+    new THREE.Vector3(.4, -.2, -2.5),
+    new THREE.Vector3(.1, -.2, -2.5),
+    new THREE.Vector3(1.6, -.2, -2.8),
+    new THREE.Vector3(1.3, -.2, -2.8),
+    new THREE.Vector3(1.0, -.2, -2.8),
+    new THREE.Vector3(.7, -.2, -2.8)
 ];
 
 var blackTakenCoordinates = [
-    new THREE.Vector3(-1.6493277399604634, -.2, -2.2587288011111673)
+    new THREE.Vector3(-1.6, -.2, -2.2),
+    new THREE.Vector3(-1.3, -.2, -2.2),
+    new THREE.Vector3(-1.0, -.2, -2.2),
+    new THREE.Vector3(-.7, -.2, -2.2),
+    new THREE.Vector3(-.4, -.2, -2.2),
+    new THREE.Vector3(-.1, -.2, -2.2),
+    new THREE.Vector3(-1.6, -.2, -2.5),
+    new THREE.Vector3(-1.3, -.2, -2.5),
+    new THREE.Vector3(-1.0, -.2, -2.5),
+    new THREE.Vector3(-0.7, -.2, -2.5),
+    new THREE.Vector3(-.4, -.2, -2.5),
+    new THREE.Vector3(-.1, -.2, -2.5),
+    new THREE.Vector3(-1.6, -.2, -2.8),
+    new THREE.Vector3(-1.3, -.2, -2.8),
+    new THREE.Vector3(-1.0, -.2, -2.8),
+    new THREE.Vector3(-.7, -.2, -2.8)
 ];
 
 // Array to remember white taken pieces
@@ -211,10 +226,11 @@ export function makeMoveFromPiece(pieceClicked, squareC, row, col, scene){
         // Remove duplicate copy of now moved piece
         pieceArray[(8 * row) + col] = undefined;
 
+        // taking logic, pushes the piece into whiteTaken or blackTaken depending on piece side
         if (findPieceSide(pieceClicked) === -1){
             console.log("white piece taken");
             whiteTaken.push(temp);
-            console.log(whiteTaken);
+            //console.log(whiteTaken);
         }
         else {
             console.log("black piece taken");

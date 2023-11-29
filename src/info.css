@@ -12,6 +12,11 @@
 	/* z-index: 1; */
 }
 
+.dropdown { 
+	top: 0.5rem;
+
+}
+
 .button:hover {
 	color: rgb(180, 12, 12);
 }

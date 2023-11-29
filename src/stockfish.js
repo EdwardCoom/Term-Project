@@ -1,4 +1,4 @@
-import { fullMoveClock, halfMoveClock, worldVectorTranslate, boardSpaceCoordinates, swapTurn, makeMoveFromPiece} from "./controls";
+import { fullMoveClock, halfMoveClock, worldVectorTranslate, boardSpaceCoordinates, swapTurn, makeMoveFromPiece, renderFromBoardStateArray, turn, changeClock, removeFromTaken, undoBoardState} from "./controls";
 import { pieceArray } from "./initialization";
 import {Turn, findPieceSide} from './util'
 
@@ -18,17 +18,36 @@ const pieceMap = new Map([
     ['king000', 'k']
 ]);
 
-class Square {
+export class Square {
     constructor(row, col) {
         this.row = row;
         this.col = col;
     }
 }
 
+export class Move {
+    constructor(start, end, halfMoveClock, fullMoveClock, pieceTaken = undefined) {
+        this.start = start;
+        this.end = end;
+        this.pieceTaken = pieceTaken;
+        this.halfMoveClock = halfMoveClock;
+        this.fullMoveClock = fullMoveClock;
+    }
+
+    undo() {
+        undoBoardState(this.start, this.end, this.pieceTaken)
+        changeClock(this.fullMoveClock, this.halfMoveClock)
+        swapTurn(false)
+        removeFromTaken(this.pieceTaken)
+        renderFromBoardStateArray();
+        console.log(pieceArray)
+    }
+}
+
 // FENString example fen= "r2q1rk1/ppp2ppp/3bbn2/3p4/8/1B1P4/PPP2PPP/RNB1QRK1 w - - 5 11"
 export const Difficulty = Object.freeze({
     Easy: 1, 
-    Medium: 3,
+    Medium: 5,
     Hard: 10,
 }) // 5 is about 1800 elo. 10 is 2231. See https://web.ist.utl.pt/diogo.ferreira/papers/ferreira13impact.pdf
 
@@ -132,7 +151,7 @@ function FENString(boardState, turn) {  // Takes in 2D array of the board and ou
     fen += '-%20-%20'
     fen += halfMoveClock.toString() + '%20'
     fen += fullMoveClock.toString()
-
+    console.log(fen)
     return fen
 }
 

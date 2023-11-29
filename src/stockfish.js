@@ -47,7 +47,7 @@ export class Move {
 // FENString example fen= "r2q1rk1/ppp2ppp/3bbn2/3p4/8/1B1P4/PPP2PPP/RNB1QRK1 w - - 5 11"
 export const Difficulty = Object.freeze({
     Easy: 1, 
-    Medium: 3,
+    Medium: 5,
     Hard: 10,
 }) // 5 is about 1800 elo. 10 is 2231. See https://web.ist.utl.pt/diogo.ferreira/papers/ferreira13impact.pdf
 
@@ -151,7 +151,7 @@ function FENString(boardState, turn) {  // Takes in 2D array of the board and ou
     fen += '-%20-%20'
     fen += halfMoveClock.toString() + '%20'
     fen += fullMoveClock.toString()
-
+    console.log(fen)
     return fen
 }
 

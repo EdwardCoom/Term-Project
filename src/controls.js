@@ -149,7 +149,7 @@ export function pickPiece(event, raycaster, camera, scene) {
         
         // AI toggle logic
         if(ai === true) {
-            var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Easy, Mode.Move)
+            var req = requestBuilder(createBoardStateArray(), turn, Difficulty.Hard, Mode.Move)
             sendRequest(req, scene)
         }
     }
@@ -275,6 +275,7 @@ export function renderFromBoardStateArray(){
     for (var i = 0; i < blackTaken.length; i++){
         worldVectorTranslate(blackTakenCoordinates[i], blackTaken[i]);
     }
+    console.log(pieceArray)
 }
 // returns array location of chess square at location of vector in world space.
 // Returns an array with the column, then row, as different values

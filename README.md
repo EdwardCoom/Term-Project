@@ -1,6 +1,6 @@
 # Term-Project
 Daniel Cunningham, Zach Coomer, Colin Douglas, Zachary Rose  
-Date: 10/19/2023
+Date: 11/29/2023
 
 A 3D rendered environment where the player can play a game of chess. The player can play both sides, or choose to play against an AI controlled opponent. The camera can be controlled for optimal viewing.
 Written with Three.js and runs on WebGL.
@@ -17,11 +17,11 @@ To run this program, you will need to install the development tools Node.js and 
 
 ## Program usage.
 
-To launch the program, once the dependancies are installed, navigate to the src folder and use the command "npx vite". 
+To launch the program, once the dependencies are installed from the previous guide, navigate to the src folder and use the command "npx vite". 
 This will start a localhost server, which you can open from the browser, or press 'o' in the terminal to open a tab automatically. Make sure to press 'q' in the terminal to quit when done. 
 
 ### How to Play and Implemented Interface
-Upon loading, You will begin in "free look" mode, and it will be white's turn. Please see below for a detailed description of how to move the camera. To move a piece, please click it directly with the mouse, and then click the square you'd like to move to. You may take a piece by seleting the square where the piece resides, or by clicking the opposing piece directly. To cancel a move, use the right click. To alter the perspective view, toggle AI, or start a new game -- use the Options menu at the top left by clicking it and then selecting the option you want from the drop down menu. The Option selection interfaces work as follows. 
+Upon loading, You will begin in "free look" mode, and it will be white's turn. Please see below for a detailed description of how to move the camera. To move a piece, please click it directly with the mouse, and then click the square you'd like to move to. You may take a piece by selecting the square where the piece resides, or by clicking the opposing piece directly. To cancel a move, use the right click. To alter the perspective view, toggle the AI, or start a new game, use the Options menu at the top left by clicking it, and then by selecting the option you want from the drop down menu. The Option selection interfaces work as follows:  
 
 * Perspectives
   
@@ -45,16 +45,16 @@ Upon loading, You will begin in "free look" mode, and it will be white's turn. P
 * Game Options
   
   * Toggle AI
-    - Selecion to toggle the AI opponent on or off, with the default being off. If toggled on, the black player will be the AI opponent. Please only use this during white's turn, but it can be enabled in the middle of a game if you'd like to try setting up an interesting board state first.
+    - Select to toggle the AI opponent on or off, with the default being off. If toggled on, the black player will be the AI opponent. Please only use this during white's turn, but it can be enabled in the middle of a game if you'd like to try setting up an interesting board state first.
   
   * Undo Move
-    - This option allows the user to take back the previous move when selected. This will undo both players moves, but if you are facing AI, make sure to start again with white's move when you are done, or the behavior may be unexpected.
+    - This option allows the user to take back the previous move when selected. This will undo both players' moves, but if you are facing AI, make sure to start again with white's move when you are done, or the behavior may be unexpected.
   
   * New Game
     - Selection will refresh the page, starting a new game.
 
-## Met Requirements
-As this project was created for a term project in CSCI 445 at the University of Tennessee at Martin, we had certain requirements to meet. Here are the requirements we were able to satisfy.
+## Requirements
+As this project was created for a term project in CSCI 445 at the University of Tennessee at Martin, we had certain requirements to meet. Here are the requirements we satisfy:
 
   * 3D transformations and camera movement
     -  We were able to implement movement of 3D chess pieces across the chess board and also on all three axes of movement, demonstrated when the pieces are placed off of the chess board and onto the table. The camera is moveable from free look to user selectable preset perspectives.
@@ -66,7 +66,7 @@ As this project was created for a term project in CSCI 445 at the University of 
     - We used different models each with their own textures as needed.
 
   * User Interactivity
-    - By the nature of the program, we satified this requirement. The user is allowed to select, move, and take chess pieces. The user can also interact with a CSS menu that allows for different camera angles, toggling a computer AI opponent, and starting a new game.
+    - This requirement is satisfied by the nature of chess. The user is able to select, move, and take chess pieces. The user can also interact with a CSS menu that allows for different camera angles, toggling a computer AI opponent, and starting a new game.
 
   * A playable environment/game
     - We have a playable game environment that allows the user to play a game, move pieces, take pieces, and look around the environment. Once you take the opponent's king, you can consider yourself the victor.
